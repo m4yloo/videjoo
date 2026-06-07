@@ -1,0 +1,27 @@
+# IDEs
+.idea/
+.vscode/
+
+# Local env files
+.env
+.env.local
+.env.*.local
+
+# Dependency directories
+node_modules/
+
+# Python Virtual Environments
+.venv/
+venv/
+ENV/
+env/
+__pycache__/
+
+# Production
+build/
+dist/
+.next/
+out/
+
+# Log files
+*.log
