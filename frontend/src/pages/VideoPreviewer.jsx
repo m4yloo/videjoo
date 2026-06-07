@@ -100,8 +100,10 @@ export default function VideoPreviewer() {
     }
 
     let loadTimeout;
+    let manifestTimeout;
     const clearLoading = () => {
       if (loadTimeout) clearTimeout(loadTimeout);
+      if (manifestTimeout) clearTimeout(manifestTimeout);
       setIsLoading(false);
     };
 
@@ -126,7 +128,7 @@ export default function VideoPreviewer() {
         hlsRef.current.destroy();
         hlsRef.current = null;
       }
-    }, 25000);
+    }, 40000);
 
     if (isHls(src) || src.includes("/api/proxy")) {
       if (Hls.isSupported()) {
@@ -135,12 +137,25 @@ export default function VideoPreviewer() {
           fragLoadingMaxRetry: 4,
           manifestLoadingMaxRetry: 3,
           levelLoadingMaxRetry: 3,
+          manifestLoadingTimeoutMs: 15000,
+          fragLoadingTimeoutMs: 20000,
+          levelLoadingTimeoutMs: 15000,
         });
         hlsRef.current = hls;
         hls.loadSource(src);
         hls.attachMedia(video);
 
+        // Manifest parsed = ready to play
         hls.on(Hls.Events.MANIFEST_PARSED, onReady);
+
+        // Manifest loading started
+        manifestTimeout = setTimeout(() => {
+          if (setIsLoading) {
+            // Manifest is taking too long, show warning but keep waiting
+            console.warn("Manifest loading is taking longer than expected");
+          }
+        }, 12000);
+
         hls.on(Hls.Events.ERROR, (_, data) => {
           if (data.type === Hls.ErrorTypes.NETWORK_ERROR) {
             if (data.fatal) {
@@ -199,6 +214,7 @@ export default function VideoPreviewer() {
 
     return () => {
       if (loadTimeout) clearTimeout(loadTimeout);
+      if (manifestTimeout) clearTimeout(manifestTimeout);
       video.removeEventListener("error", onVideoError);
       if (hlsRef.current) {
         hlsRef.current.destroy();
@@ -351,7 +367,7 @@ export default function VideoPreviewer() {
 
           <motion.div layout transition={{ duration: 0.45, ease }} className={isExpanded ? "mb-5" : ""}>
             <form onSubmit={handlePlay}>
-              <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-zinc-900/70 ring-1 ring-zinc-800/80 focus-within:ring-zinc-700/80 transition-shadow shadow-[0_8px_32px_-12px_rgba(0,0,0,0.5)]">
+              <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-zinc-900/70 ring-1 ring-zinc-800/80 focus-within:ring-zinc-700/80 transition-shadow shadow-[0_8px_32px_-12px_rgba(0,0,0,[...]
                 <LinkIcon className="h-4 w-4 text-zinc-600 flex-shrink-0 ml-3" />
                 <input
                   data-testid="video-url-input"
@@ -375,7 +391,7 @@ export default function VideoPreviewer() {
                   data-testid="play-button"
                   type="submit"
                   disabled={isLaunching}
-                  className="bg-zinc-100 text-zinc-900 hover:bg-white disabled:opacity-60 rounded-xl pl-4 pr-3.5 py-2.5 text-sm font-semibold inline-flex items-center gap-2 transition-colors shrink-0"
+                  className="bg-zinc-100 text-zinc-900 hover:bg-white disabled:opacity-60 rounded-xl pl-4 pr-3.5 py-2.5 text-sm font-semibold inline-flex items-center gap-2 transition-colors shri[...]
                 >
                   Prehrať
                   <ArrowRight className="h-4 w-4" />
