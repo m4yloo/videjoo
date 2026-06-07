@@ -174,11 +174,11 @@ export default function VideoControls({ videoRef, containerRef, isLoading = fals
     if (wasPlayingRef.current) videoRef.current?.play().catch(() => {});
   };
 
-  const toggleMute = () => {
+  const toggleMute = useCallback(() => {
     const v = videoRef.current;
     if (!v) return;
     v.muted = !v.muted;
-  };
+  }, [videoRef]);
 
   const handleVolume = (val) => {
     const v = videoRef.current;
@@ -195,7 +195,7 @@ export default function VideoControls({ videoRef, containerRef, isLoading = fals
     setShowSpeedMenu(false);
   };
 
-  const toggleFullscreen = async () => {
+  const toggleFullscreen = useCallback(async () => {
     const target = containerRef.current;
     const v = videoRef.current;
     try {
@@ -209,7 +209,7 @@ export default function VideoControls({ videoRef, containerRef, isLoading = fals
     } catch {
       // ignore
     }
-  };
+  }, [containerRef, videoRef]);
 
   useEffect(() => {
     const v = videoRef.current;
@@ -273,7 +273,7 @@ export default function VideoControls({ videoRef, containerRef, isLoading = fals
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [videoRef, togglePlay, revealControls, containerRef]);
+  }, [videoRef, togglePlay, toggleMute, toggleFullscreen, revealControls]);
 
   const progress = duration ? (currentTime / duration) * 100 : 0;
 
