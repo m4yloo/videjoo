@@ -367,7 +367,7 @@ export default function VideoPreviewer() {
 
           <motion.div layout transition={{ duration: 0.45, ease }} className={isExpanded ? "mb-5" : ""}>
             <form onSubmit={handlePlay}>
-              <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-zinc-900/70 ring-1 ring-zinc-800/80 focus-within:ring-zinc-700/80 transition-shadow shadow-[0_8px_32px_-12px_rgba(0,0,0,[...]
+              <div className="flex items-center gap-2 p-1.5 rounded-2xl bg-zinc-900/70 ring-1 ring-zinc-800/80 focus-within:ring-zinc-700/80 transition-shadow shadow-[0_8px_32px_-12px_rgba(0,0,0,0.5)]">
                 <LinkIcon className="h-4 w-4 text-zinc-600 flex-shrink-0 ml-3" />
                 <input
                   data-testid="video-url-input"
@@ -391,7 +391,7 @@ export default function VideoPreviewer() {
                   data-testid="play-button"
                   type="submit"
                   disabled={isLaunching}
-                  className="bg-zinc-100 text-zinc-900 hover:bg-white disabled:opacity-60 rounded-xl pl-4 pr-3.5 py-2.5 text-sm font-semibold inline-flex items-center gap-2 transition-colors shri[...]
+                  className="bg-zinc-100 text-zinc-900 hover:bg-white disabled:opacity-60 rounded-xl pl-4 pr-3.5 py-2.5 text-sm font-semibold inline-flex items-center gap-2 transition-colors shrink-0"
                 >
                   Prehrať
                   <ArrowRight className="h-4 w-4" />
